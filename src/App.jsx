@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./styles.css";
 
 import { InputTodo } from "./components/InputTodo";
+import { InprogressTodos } from "./components/InprogressTodos";
+import { DoneTodos } from "./components/DoneTodos";
 
 // memo:
 //  map等の繰り返しを利用してレンダリングする際は、一番親のelementでkeyを指定する必要がある
@@ -53,38 +55,17 @@ export const App = () => {
         todoText={todoText}
         onChange={onChangeTodoText}
         onClick={onClickAdd}
+        disabled={inprogressTodos.length >= 5}
       />
-      <div className="inprogress-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {inprogressTodos.map((todo, index) => {
-            return (
-              <li key={todo}>
-                <div className="list-row">
-                  <p>{todo}</p>
-                  <button onClick={() => onClickDone(index)}>完了</button>
-                  <button onClick={() => onClickDelete(index)}>削除</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-      <div className="done-area">
-        <p className="title">完了のTODO</p>
-        <ul>
-          {doneTodos.map((todo, index) => {
-            return (
-              <li key={todo}>
-                <div className="list-row">
-                  <p>{todo}</p>
-                  <button onClick={() => onClickBack(index)}>戻す</button>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      {inprogressTodos.length >= 5 && (
+        <p style={{ color: "red" }}>登録できるtodoは5個までです。</p>
+      )}
+      <InprogressTodos
+        todos={inprogressTodos}
+        onClickDone={onClickDone}
+        onClickDelete={onClickDelete}
+      />
+      <DoneTodos todos={doneTodos} onClickBack={onClickBack} />
     </>
   );
 };
